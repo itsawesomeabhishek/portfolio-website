@@ -9,6 +9,24 @@
 
 A production-grade, neo-brutalist personal portfolio and integrated content management dashboard. Built for modern software engineers, developers, and creators who demand striking visual identity paired with seamless, real-time content control.
 
+<br />
+
+<p align="center">
+  <img src="public/screenshots/landing-preview.png" alt="Neo-Brutalist Developer Portfolio Preview" width="100%" />
+</p>
+<p align="center">
+  <em>Public Facing Neo-Brutalist Developer Portfolio</em>
+</p>
+
+<br />
+
+<p align="center">
+  <img src="public/screenshots/admin-dashboard.png" alt="Headless Admin CMS Dashboard" width="100%" />
+</p>
+<p align="center">
+  <em>Integrated Headless Admin CMS Dashboard (<code>/admin</code>)</em>
+</p>
+
 ---
 
 ## 🌟 Key Highlights
@@ -179,6 +197,16 @@ To enable persistent cloud database synchronization:
 | `npm run test:coverage`| `vitest run --coverage`| Generate unit test coverage report |
 | `npm run test:e2e` | `playwright test` | Run Playwright end-to-end browser tests |
 | `npm run seed` | `node scripts/seed-supabase.mjs`| Seed Supabase database with initial content |
+
+## 📈 Star History
+
+<a href="https://star-history.com/#itsawesomeabhishek/portfolio-website&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=itsawesomeabhishek/portfolio-website&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=itsawesomeabhishek/portfolio-website&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=itsawesomeabhishek/portfolio-website&type=Date" />
+ </picture>
+</a>
 
 ---
 
