@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getSession } from "@/lib/auth-session";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
@@ -8,13 +9,7 @@ export const metadata: Metadata = {
   description: "Management dashboard for portfolio content and settings",
 };
 
-export const dynamic = "force-dynamic";
-
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+async function AdminShell({ children }: { children: React.ReactNode }) {
   const session = await getSession();
 
   // If no session is active (e.g., viewing /admin/login), don't render admin shell
@@ -32,5 +27,23 @@ export default async function AdminLayout({
         </main>
       </div>
     </div>
+  );
+}
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-8 font-mono text-sm text-ink" role="status">
+          Loading admin...
+        </div>
+      }
+    >
+      <AdminShell>{children}</AdminShell>
+    </Suspense>
   );
 }

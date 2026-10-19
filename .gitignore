@@ -49,3 +49,9 @@ next-env.d.ts
 /graphify-out/
 .graphify*
 
+
+# local AI tooling (not part of the project)
+/.cursor/
+/.agents/
+/CLAUDE.md
+/context/

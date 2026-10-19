@@ -36,7 +36,6 @@
     "seed": "node scripts/seed-supabase.mjs"
   },
   "dependencies": {
-    "@prisma/client": "^7.10.1",
     "@supabase/supabase-js": "^2.118.0",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.11.0",

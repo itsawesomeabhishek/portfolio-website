@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, AlertTriangle, Database, Cloud, ShieldCheck } from "lucide-react";
+import { CheckCircle2, Database, Cloud, ShieldCheck } from "lucide-react";
 import type { NavLink } from "@/content/types";
 
 export function SettingsManager({

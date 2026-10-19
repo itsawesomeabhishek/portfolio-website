@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Activity, Bell, Database } from "lucide-react";
+import { Database } from "lucide-react";
 
 export function AdminTopbar() {
   const pathname = usePathname();

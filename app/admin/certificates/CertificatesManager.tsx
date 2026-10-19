@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Plus, Trash2, X, Save, AlertCircle, Award } from "lucide-react";
+import { Plus, X, Save, AlertCircle, Award } from "lucide-react";
 import { saveCertificateAction, deleteCertificateAction } from "@/lib/actions/content";
 import { TextField } from "@/components/admin/FormField";
 import { ImageUploader } from "@/components/admin/ImageUploader";

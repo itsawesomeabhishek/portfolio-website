@@ -127,7 +127,7 @@ export function QuotesManager({
             <div>
               <QuoteIcon className="h-6 w-6 text-neo-yellow mb-2" />
               <p className="font-sans text-sm italic text-ink leading-relaxed">
-                "{q.text}"
+                &ldquo;{q.text}&rdquo;
               </p>
             </div>
 

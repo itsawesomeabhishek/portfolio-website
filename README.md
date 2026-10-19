@@ -1,4 +1,4 @@
-# ⚡ Neo-Brutalist Developer Portfolio & Headless CMS
+﻿# ⚡ Neo-Brutalist Developer Portfolio & Headless CMS
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.4.1-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.3.0-blue?style=for-the-badge&logo=react)](https://react.dev/)
@@ -36,7 +36,7 @@ A production-grade, neo-brutalist personal portfolio and integrated content mana
 - **🗄️ Supabase PostgreSQL with Resilient Fallback**: Connects to Supabase for dynamic cloud persistence. If Supabase is offline or unconfigured, it automatically falls back to local static files (`content/*.ts`) without breaking the UI.
 - **📸 Cloudinary & Local Asset Pipeline**: Drag-and-drop media uploader that uploads directly to Cloudinary CDN, with automatic fallback to `/public/uploads` for local development.
 - **🔒 Secure Stateless Auth**: Authenticated admin session management using HTTP-only encrypted JWT tokens via `jose` (HS256) and Next.js 16 route protection.
-- **🧪 100% Test Coverage**: Complete test suites with **Vitest**, **React Testing Library**, and **Playwright E2E**, with zero regressions.
+- **🧪 Tested**: Unit and component tests with **Vitest** + **React Testing Library** (public site and content are well covered; the admin CMS and server actions are not yet covered, contributions welcome) and **Playwright** E2E smoke tests.
 - **🌐 SEO & Accessibility**: Semantic HTML5 tags, JSON-LD structured data, metadata generators, and high-contrast WCAG-compliant design.
 
 ---
@@ -81,7 +81,7 @@ Edit `.env.local` to set your desired credentials:
 ```env
 # Admin Credentials
 ADMIN_EMAIL="admin@example.com"
-ADMIN_PASSWORD="YourSecurePassword123!"
+ADMIN_PASSWORD="change-me-to-a-strong-password"
 JWT_SECRET="generate-a-secure-random-secret-key-at-least-32-characters-long"
 ```
 > **Note**: Supabase and Cloudinary keys are optional for local development. If omitted, the website automatically operates using static files (`content/*.ts`) and local disk uploads (`/public/uploads`).
@@ -101,8 +101,8 @@ Access the admin dashboard at:
 👉 **[http://localhost:3000/admin](http://localhost:3000/admin)**
 
 Unauthenticated visits are automatically redirected to `/admin/login`. Log in using the credentials defined in your `.env.local`:
-- **Default Email**: `admin@example.com` (or your configured `ADMIN_EMAIL`)
-- **Default Password**: `YourSecurePassword123!` (or your configured `ADMIN_PASSWORD`)
+
+> **Security**: `.env.example` contains placeholders only. Set your own strong `ADMIN_PASSWORD` and a random `JWT_SECRET` (32+ characters) before deploying, and never commit `.env.local`.
 
 ### Admin Modules
 - **Identity & Bio**: Personal name, tagline, availability status, avatar, resume link, and bio paragraphs.
@@ -142,44 +142,40 @@ To enable persistent cloud database synchronization:
 
 ```
 ├── app/
-│   ├── (public)/             # Main portfolio landing page & metadata
-│   │   ├── page.tsx          # Dynamic landing page pulling from lib/data.ts
-│   │   ├── layout.tsx        # Public root layout
-│   │   └── globals.css       # Tailwind CSS v4 design tokens & neo-brutalist theme
-│   ├── admin/                # Headless Admin CMS
-│   │   ├── layout.tsx        # Protected admin shell layout
-│   │   ├── page.tsx          # Dashboard overview & metrics
-│   │   ├── login/            # Admin login screen
-│   │   ├── identity/         # Profile & bio manager
-│   │   ├── projects/         # Projects CRUD
-│   │   ├── stack/            # Tech stack CRUD
-│   │   ├── services/         # Services CRUD
-│   │   ├── stats/            # Coding metrics CRUD
-│   │   ├── education/        # Education milestones CRUD
-│   │   ├── certificates/     # Certifications CRUD
-│   │   ├── quotes/           # Quotes CRUD
-│   │   ├── contact/          # Contact details CRUD
-│   │   └── settings/         # Diagnostics & configuration
-│   └── api/
-│       └── upload/           # Cloudinary / Local upload API route
+│   ├── page.tsx              # Public portfolio landing page
+│   ├── layout.tsx            # Root layout, fonts, metadata
+│   ├── globals.css           # Tailwind CSS v4 design tokens & theme
+│   ├── admin/                # Headless Admin CMS (identity, projects, stack, ...)
+│   └── api/upload/           # Cloudinary / local upload route
 ├── components/
-│   ├── admin/                # Admin UI components (sidebar, topbar, modal, uploader)
-│   ├── sections/             # Public landing page sections (Hero, About, Projects, etc.)
-│   └── ui/                   # Shared UI primitives (buttons, badges, cards)
-├── content/                  # Static content fallback files (*.ts)
+│   ├── admin/                # Admin UI components
+│   ├── chrome/               # Navbar, boot screen, scroll progress
+│   ├── sections/             # Landing page sections
+│   └── ui/                   # Shared UI primitives
+├── content/                  # Static content (edit these to make it yours)
+├── e2e/                      # Playwright end-to-end tests
 ├── lib/
-│   ├── actions/              # Server Actions (auth, content mutations, settings)
-│   ├── auth-session.ts       # Stateless JWT cookie session utilities
-│   ├── cloudinary.ts         # Cloudinary SDK client
-│   ├── data.ts               # Universal data fetcher (Supabase with static fallback)
-│   ├── supabase.ts           # Supabase client initializer
-│   └── validators.ts         # Zod validation schemas
-├── proxy.ts                  # Next.js 16 route protection proxy
-├── scripts/
-│   └── seed-supabase.mjs     # Database seeder script
+│   ├── actions/              # Server Actions (auth, content mutations)
+│   ├── auth-session.ts       # Stateless JWT cookie session
+│   ├── cloudinary.ts         # Cloudinary client
+│   ├── data.ts               # Data fetcher (Supabase with static fallback)
+│   ├── supabase.ts           # Supabase client
+│   └── validators.ts         # Zod schemas
+├── public/                   # Images, resume, certificates (replace with yours)
+├── scripts/seed-supabase.mjs # Database seeder
 ├── supabase-schema.sql       # PostgreSQL schema & RLS policies
-└── tests/                    # Vitest unit & integration test suites
+└── proxy.ts                  # Next.js 16 admin route protection
 ```
+
+Unit tests live next to the code they cover (`*.test.ts(x)`).
+
+---
+
+## 🎨 Make It Yours
+
+1. Edit the files in `content/` (identity, projects, stack, services, stats, contact).
+2. Replace the personal assets in `public/` (`assets/`, `certificates/`, `project/`, `resume/`, `screenshots/`).
+3. Update the site metadata in `app/layout.tsx`.
 
 ---
 
