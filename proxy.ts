@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const SECRET_KEY = process.env.JWT_SECRET || "super-secure-portfolio-admin-secret-key-replace-in-env";
-const key = new TextEncoder().encode(SECRET_KEY);
+import { getJwtKey } from "@/lib/auth-secret";
+
 const COOKIE_NAME = "portfolio_admin_token";
 
 export async function proxy(request: NextRequest) {
@@ -13,8 +13,9 @@ export async function proxy(request: NextRequest) {
   if (pathname.startsWith("/admin")) {
     const token = request.cookies.get(COOKIE_NAME)?.value;
     let isAuthenticated = false;
+    const key = getJwtKey();
 
-    if (token) {
+    if (token && key) {
       try {
         await jwtVerify(token, key, { algorithms: ["HS256"] });
         isAuthenticated = true;

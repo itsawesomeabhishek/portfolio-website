@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import Link from "next/link";
@@ -73,7 +73,6 @@ export default function AdminLoginPage() {
                     type="email"
                     autoComplete="email"
                     required
-                    defaultValue="abhisheq117@gmail.com"
                     placeholder="admin@example.com"
                     className="w-full border-2 border-line bg-background py-2.5 pr-3 pl-10 font-mono text-sm text-ink outline-none transition-colors focus:bg-white focus:ring-0"
                   />
@@ -111,15 +110,6 @@ export default function AdminLoginPage() {
                 </button>
               </div>
             </form>
-
-            <div className="mt-6 border-t-2 border-dashed border-line pt-4 text-center">
-              <p className="font-mono text-[11px] text-muted">
-                Default credentials for initial setup:{" "}
-                <code className="bg-neo-yellow/30 px-1 py-0.5 font-bold text-ink">
-                  Admin@12345
-                </code>
-              </p>
-            </div>
           </div>
         </div>
       </div>

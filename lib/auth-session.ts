@@ -1,8 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const SECRET_KEY = process.env.JWT_SECRET || "super-secure-portfolio-admin-secret-key-replace-in-env";
-const key = new TextEncoder().encode(SECRET_KEY);
+import { getJwtKey } from "@/lib/auth-secret";
 
 export const COOKIE_NAME = "portfolio_admin_token";
 
@@ -14,6 +13,10 @@ export interface SessionPayload {
 }
 
 export async function encrypt(payload: Omit<SessionPayload, "expiresAt">) {
+  const key = getJwtKey();
+  if (!key) {
+    throw new Error("JWT_SECRET must be set to at least 32 characters.");
+  }
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -22,7 +25,8 @@ export async function encrypt(payload: Omit<SessionPayload, "expiresAt">) {
 }
 
 export async function decrypt(token: string | undefined = ""): Promise<SessionPayload | null> {
-  if (!token) return null;
+  const key = getJwtKey();
+  if (!token || !key) return null;
   try {
     const { payload } = await jwtVerify(token, key, {
       algorithms: ["HS256"],

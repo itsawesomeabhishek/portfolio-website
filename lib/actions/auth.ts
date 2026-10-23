@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
@@ -23,50 +23,53 @@ export async function loginAction(
     return { error: result.error.issues[0]?.message || "Invalid input." };
   }
 
-  const defaultEmail = process.env.ADMIN_EMAIL || "abhisheq117@gmail.com";
-  const defaultPassword = process.env.ADMIN_PASSWORD || "Admin@12345";
+  // Env-based fallback login. No built-in defaults: if these are unset,
+  // only Supabase admin users can sign in.
+  const envEmail = process.env.ADMIN_EMAIL;
+  const envPassword = process.env.ADMIN_PASSWORD;
+  const matchesEnvCredentials =
+    Boolean(envEmail && envPassword) &&
+    result.data.email.toLowerCase() === envEmail!.toLowerCase() &&
+    result.data.password === envPassword;
+
+  let admin: { id: string; email: string; name: string } | null = null;
 
   try {
     if (supabase) {
-      const { data: admin } = await supabase
+      const { data } = await supabase
         .from("admin_users")
         .select("*")
         .eq("email", result.data.email)
         .maybeSingle();
 
-      if (admin && admin.hashed_password) {
-        const isValid = await bcrypt.compare(result.data.password, admin.hashed_password);
+      if (data?.hashed_password) {
+        const isValid = await bcrypt.compare(result.data.password, data.hashed_password);
         if (isValid) {
-          await createSession(admin.id, admin.email, admin.name || "Abhishek");
-          redirect("/admin");
+          admin = { id: data.id, email: data.email, name: data.name || "Admin" };
         }
       }
     }
-
-    // Fallback check: default credentials if Supabase hasn't been set up yet
-    if (
-      result.data.email.toLowerCase() === defaultEmail.toLowerCase() &&
-      result.data.password === defaultPassword
-    ) {
-      await createSession("default-admin", defaultEmail, "Abhishek");
-    } else {
-      return { error: "Invalid email or password." };
-    }
   } catch (err) {
-    console.warn("Auth check failed:", err);
-    if (
-      result.data.email.toLowerCase() === defaultEmail.toLowerCase() &&
-      result.data.password === defaultPassword
-    ) {
-      await createSession("default-admin", defaultEmail, "Abhishek");
-    } else {
-      return { error: "Invalid email or password." };
-    }
+    console.warn("Auth lookup failed:", err);
+  }
+
+  if (!admin && matchesEnvCredentials) {
+    admin = { id: "env-admin", email: envEmail!, name: "Admin" };
+  }
+
+  if (!admin) {
+    return { error: "Invalid email or password." };
+  }
+
+  try {
+    await createSession(admin.id, admin.email, admin.name);
+  } catch (err) {
+    console.error("Could not create admin session:", err);
+    return { error: "Server is not configured for admin login." };
   }
 
   redirect("/admin");
 }
-
 export async function logoutAction() {
   await deleteSession();
   redirect("/admin/login");
